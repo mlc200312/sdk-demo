@@ -24,10 +24,11 @@ public class MqConnectionConfig {
     @Bean
     public ConnectionFactory mqConnectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setAddresses(environment.getRequiredProperty("rabbitmq.addresses"));
-        connectionFactory.setUsername(environment.getRequiredProperty("rabbitmq.username"));
-        connectionFactory.setPassword(environment.getRequiredProperty("rabbitmq.password"));
-        connectionFactory.setVirtualHost(environment.getRequiredProperty("rabbitmq.vhost"));
+        connectionFactory.setHost(environment.getRequiredProperty("spring.rabbitmq.host"));
+        connectionFactory.setPort(environment.getProperty("spring.rabbitmq.port", Integer.class));
+        connectionFactory.setUsername(environment.getRequiredProperty("spring.rabbitmq.username"));
+        connectionFactory.setPassword(environment.getRequiredProperty("spring.rabbitmq.password"));
+        connectionFactory.setVirtualHost(environment.getRequiredProperty("spring.rabbitmq.virtual-host"));
         connectionFactory.setPublisherReturns(true);
         return connectionFactory;
     }

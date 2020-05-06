@@ -2,8 +2,6 @@ package mxc.sdk.rabbit.config.consumer;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
-import org.springframework.amqp.rabbit.retry.MissingMessageIdAdvice;
-import org.springframework.retry.policy.MapRetryContextCache;
 
 /**
  * @Description: 功能描述
@@ -20,9 +18,9 @@ public class MqConsumerAdvice {
      *
      * @return
      */
-    public static MissingMessageIdAdvice missingMessageIdAdvice() {
-        return new MissingMessageIdAdvice(new MapRetryContextCache());
-    }
+//    public static MissingMessageIdAdvice missingMessageIdAdvice() {
+//        return new MissingMessageIdAdvice(new MapRetryContextCache());
+//    }
 
     /**
      * 接收失败重试

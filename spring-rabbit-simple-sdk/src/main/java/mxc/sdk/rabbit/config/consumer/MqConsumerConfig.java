@@ -32,8 +32,8 @@ public class MqConsumerConfig {
     private final Boolean retryPolicySet = Boolean.TRUE;
 
     @Bean
-    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
-        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+    public RabbitAdmin rabbitAdmin(ConnectionFactory mqConnectionFactory) {
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(mqConnectionFactory);
         rabbitAdmin.setAutoStartup(false);
 
         if (CollectionUtils.isNotEmpty(mqMessageHandlers)) {
@@ -45,7 +45,7 @@ public class MqConsumerConfig {
                 BindingObject bindingObject = new BindingObject();
                 mqMessageHandler.initBinding(bindingObject);
                 SimpleMessageListenerContainer messageContainer = new SimpleMessageListenerContainer();
-                messageContainer.setConnectionFactory(connectionFactory);
+                messageContainer.setConnectionFactory(mqConnectionFactory);
                 //开始配置MQ消费者
                 if (CollectionUtils.isEmpty(bindingObject.getQueues())) {
                     throw new RuntimeException("queues may not be empty");
@@ -68,7 +68,7 @@ public class MqConsumerConfig {
                 }
                 //配置消息接收失败重试策略
                 if (retryPolicySet) {
-                    messageContainer.setAdviceChain(new Advice[]{MqConsumerAdvice.missingMessageIdAdvice(), MqConsumerAdvice.methodInterceptor()});
+                    messageContainer.setAdviceChain(new Advice[]{MqConsumerAdvice.methodInterceptor()});
                 }
                 //设置自定义参数
                 mqMessageHandler.adjustContainer(messageContainer);

@@ -23,8 +23,8 @@ public class MqProducerConfig {
      * @return
      */
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+    public RabbitTemplate rabbitTemplate(ConnectionFactory mqConnectionFactory) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(mqConnectionFactory);
         rabbitTemplate.setMessageConverter(new MqMessageConverter());
         rabbitTemplate.setMandatory(true);
         rabbitTemplate.setReturnCallback(new RabbitMqReturnCallback());

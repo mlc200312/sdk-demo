@@ -38,14 +38,12 @@ public @interface MqListener {
      */
     String routingKey() default "#";
 
-    //消费者配置
-
     /**
      * 是否开启消费者并发自动扩展，默认关闭
      *
      * @return
      */
-    boolean enableConsumerAutoExpand() default true;
+    boolean enableConsumerAutoExpand() default false;
 
     /**
      * 初始并发消费者数量，默认1

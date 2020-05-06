@@ -22,8 +22,10 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Created by chenkaideng on 2019/2/14.
- */
+ * @Description: 功能描述
+ * @Author: Mr.Min
+ * @Date: 2019-08-30
+ **/
 public class MqListenerAnnotationProcessor implements BeanPostProcessor {
 
     @Autowired
@@ -32,7 +34,7 @@ public class MqListenerAnnotationProcessor implements BeanPostProcessor {
     @Autowired
     private ConnectionFactory mqConnectionFactory;
 
-    private final Boolean retryPolicySet = Boolean.FALSE;
+    private final Boolean retryPolicySet = Boolean.TRUE;
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -42,13 +44,10 @@ public class MqListenerAnnotationProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         Class targetClass = AopUtils.getTargetClass(bean);
-        ReflectionUtils.doWithMethods(targetClass, new ReflectionUtils.MethodCallback() {
-            @Override
-            public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                MqListener mqListener = AnnotationUtils.getAnnotation(method, MqListener.class);
-                if (mqListener != null) {
-                    processRabbitAdmin(mqListener, method, bean);
-                }
+        ReflectionUtils.doWithMethods(targetClass, method -> {
+            MqListener mqListener = AnnotationUtils.getAnnotation(method, MqListener.class);
+            if (mqListener != null) {
+                processRabbitAdmin(mqListener, method, bean);
             }
         });
         return bean;
@@ -89,7 +88,7 @@ public class MqListenerAnnotationProcessor implements BeanPostProcessor {
         }
         //配置消息接收失败重试策略
         if (retryPolicySet) {
-            messageContainer.setAdviceChain(new Advice[]{MqConsumerAdvice.missingMessageIdAdvice(), MqConsumerAdvice.methodInterceptor()});
+            messageContainer.setAdviceChain(new Advice[]{MqConsumerAdvice.methodInterceptor()});
         }
         //设置消费者配置
         initConsumerConfig(messageContainer, mqListener);
